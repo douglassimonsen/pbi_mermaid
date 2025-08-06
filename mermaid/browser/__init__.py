@@ -8,7 +8,7 @@ from pathlib import Path
 
 import jinja2
 
-MERMAID_TEMPLATE = jinja2.Template((Path(__file__).parent / "template.html").read_text())
+MERMAID_TEMPLATE = jinja2.Template((Path(__file__).parent / "template_advanced.html").read_text())
 
 
 def render_html(html_path: "StrPath"):
