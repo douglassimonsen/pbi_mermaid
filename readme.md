@@ -1,5 +1,6 @@
 # Dev Instructions
 
+`pip install pbi_mermaid`
 
 ## Set Up
 
