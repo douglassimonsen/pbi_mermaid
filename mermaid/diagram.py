@@ -18,6 +18,12 @@ class MermaidDiagram:
     links: list[Link]
     orientation: Orientation
 
+    def __init__(self, nodes: list[Node], links: list[Link], title: str="", orientation: Orientation=Orientation.default) -> None:
+        self.title = title
+        self.nodes = nodes
+        self.links = links
+        self.orientation = orientation
+
     def to_markdown(self) -> str:
         node_text = "\n".join(
             n.to_markdown()
