@@ -18,7 +18,11 @@ dev = [
   "jinja2>=3.1.4",
   "requests>=2.32.3",
 ]
-
+docs = [
+  "mkdocs>=1.6.1",
+  "mkdocs-material>=9.6.16",
+  "mkdocstrings-python>=0.30.0",
+]
 [tool.hatch.version]
 path = "pbi_mermaid/__init__.py"
 
