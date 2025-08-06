@@ -1,5 +1,5 @@
-from enum import Enum
 from dataclasses import dataclass
+from enum import Enum
 
 
 @dataclass
@@ -31,14 +31,17 @@ class Node:
     content: str
     style: str
 
-    def __init__(self, id: str, shape: NodeShape=NodeShape.normal, content: str="", style: str="") -> None:
+    def __init__(self, id: str, shape: NodeShape = NodeShape.normal, content: str = "", style: str = "") -> None:
         self.id = id
         self.shape = shape.value
         self.content = content
         self.style = style
 
     def to_markdown(self) -> str:
-        ret = f"{self.id}{self.shape.start}\"{self.content or self.id}\"{self.shape.end}"
+        ret = f'{self.id}{self.shape.start}"{self.content or self.id}"{self.shape.end}'
         if self.style:
             ret += f"\nstyle {self.id} {self.style}"
         return ret
+
+    def __repr__(self) -> str:
+        return f"Node({self.id})"

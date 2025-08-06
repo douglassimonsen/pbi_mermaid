@@ -3,4 +3,4 @@ from .link import Link
 from .node import Node
 
 __all__ = ["Node", "Link", "MermaidDiagram"]
-__version__ = "0.1.2"
+__version__ = "0.1.3"
