@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "mermaid"
+name = "pbi_mermaid"
 dependencies = []
 description = "Generate Mermaid Markdown Programmatically"
 readme = "README.md"
@@ -20,7 +20,7 @@ dev = [
 ]
 
 [tool.hatch.version]
-path = "mermaid/__init__.py"
+path = "pbi_mermaid/__init__.py"
 
 [tool.doc8]
 max-line-length = 120
