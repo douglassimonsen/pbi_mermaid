@@ -1,6 +1,6 @@
 from mermaid import Node, Link, MermaidDiagram
 
-n1 = Node("hi")
+n1 = Node("hi", style="fill:#f9f,stroke:#333,stroke-width:4px")
 n2 = Node("bye")
 l = Link(n1, n2)
 x = MermaidDiagram(
