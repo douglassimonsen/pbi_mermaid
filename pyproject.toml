@@ -11,7 +11,12 @@ dynamic = ["version"]
 requires-python = ">=3.11.0"
 
 [project.optional-dependencies]
-dev = ["python-dotenv>=1.0.1", "GitPython>=3.1", "requests>=2.32.3"]
+dev = [
+  "python-dotenv>=1.0.1",
+  "GitPython>=3.1",
+  "jinja2>=3.1.4",
+  "requests>=2.32.3",
+]
 
 [tool.hatch.version]
 path = "mermaid/__init__.py"

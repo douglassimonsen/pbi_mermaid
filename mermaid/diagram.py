@@ -1,5 +1,7 @@
+import tempfile
 from enum import StrEnum
 
+from .browser import MERMAID_TEMPLATE, render_html
 from .link import Link
 from .node import Node
 
@@ -35,3 +37,10 @@ class MermaidDiagram:
         header = f"---\ntitle: {self.title}\n---" if self.title else ""
         graph_defines = f"graph {self.orientation}"
         return f"{header}\n{graph_defines}\n{node_text}\n{link_text}"
+
+    def show(self) -> None:
+        with tempfile.NamedTemporaryFile(
+            "w", suffix=".html", delete=False
+        ) as f:  # delete=False needed to let the renderer actually find the file
+            f.write(MERMAID_TEMPLATE.render(mermaid_markdown=self.to_markdown()))
+            render_html(f.name)
