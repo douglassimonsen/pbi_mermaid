@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any
 
 
 @dataclass
@@ -27,20 +28,43 @@ class NodeShape(Enum):
 
 class Node:
     id: str
-    shape: Shape
+    shape: NodeShape
     content: str
-    style: str
+    style: dict[str, str]
 
-    def __init__(self, id: str, shape: NodeShape = NodeShape.normal, content: str = "", style: str = "") -> None:
+    def __init__(
+        self,
+        id: str,
+        shape: NodeShape = NodeShape.normal,
+        content: str = "",
+        style: dict[str, str] | None = None,
+    ) -> None:
         self.id = id
-        self.shape = shape.value
+        self.shape = shape
         self.content = content
-        self.style = style
+        self.style = style or {}
+
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, Node):
+            return self.id == other.id
+        return False
+
+    def __hash__(self) -> int:
+        return hash(self.id)
+
+    def __lt__(self, other: Any) -> bool:
+        if not isinstance(other, Node):
+            return NotImplemented
+        return self.id < other.id
+
+    def escape_content(self) -> None:
+        self.content = f'"{self.content}"'
 
     def to_markdown(self) -> str:
-        ret = f'{self.id}{self.shape.start}"{self.content or self.id}"{self.shape.end}'
+        ret = f"{self.id}{self.shape.value.start}{self.content or self.id}{self.shape.value.end}"
         if self.style:
-            ret += f"\nstyle {self.id} {self.style}"
+            style = ",".join(f"{k}:{v}" for k, v in self.style.items())
+            ret += f"\nstyle {self.id} {style}"
         return ret
 
     def __repr__(self) -> str:

@@ -54,6 +54,11 @@ class Link:
     def __hash__(self) -> int:
         return hash(self.id)
 
+    def __lt__(self, other: Any) -> bool:
+        if not isinstance(other, Link):
+            return NotImplemented
+        return (self.from_head, self.to_head) < (other.from_head, other.to_head)
+
     def to_markdown(self) -> str:
         link_text = f"{self.from_head}{self.link_shape}{self.to_head}"
         if self.link_text:
