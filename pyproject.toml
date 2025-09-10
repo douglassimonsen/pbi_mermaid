@@ -23,6 +23,10 @@ docs = [
   "mkdocs-material>=9.6.16",
   "mkdocstrings-python>=0.30.0",
 ]
+[project.urls]
+Homepage = "https://github.com/douglassimonsen/pbi_mermaid"
+Documentation = "https://douglassimonsen.github.io/pbi_mermaid/"
+
 [tool.hatch.version]
 path = "pbi_mermaid/__init__.py"
 
