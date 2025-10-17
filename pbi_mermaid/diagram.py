@@ -1,7 +1,7 @@
 import tempfile
 from enum import StrEnum
 
-from .browser import MERMAID_TEMPLATE, render_html
+from .browser import LEGEND_TEMPLATE, MERMAID_TEMPLATE, render_html
 from .link import Link
 from .misc.chunker import chunker
 from .node import Node, NodeClass
@@ -47,11 +47,15 @@ class Flowchart:
         graph_defines = f"graph {self.orientation}"
         return f"{header}\n{graph_defines}\n{node_text}\n{link_text}\n{node_class_text}"
 
-    def show(self) -> None:
+    def show(self, include_legend: bool = True) -> None:
         with tempfile.NamedTemporaryFile(
             "w", suffix=".html", delete=False
         ) as f:  # delete=False needed to let the renderer actually find the file
-            f.write(MERMAID_TEMPLATE.render(mermaid_markdown=self.to_markdown()))
+            if include_legend:
+                legend = LEGEND_TEMPLATE.render(node_classes=self.node_classes)
+            f.write(
+                MERMAID_TEMPLATE.render(mermaid_markdown=self.to_markdown(), legend=legend if include_legend else "")
+            )
             render_html(f.name)
 
     def chunk(self, split_nodes: list["Node"]) -> list["Flowchart"]:

@@ -54,7 +54,22 @@ class NodeClass:
     name: str
     style: dict[str, str] = field(default_factory=dict, compare=False, hash=False)
 
+    def legend_style_text(self) -> str:
+        # Generate the style text for the legend
+        css_name_mapper = {
+            "fill": "background-color",
+            "stroke": "border-color",
+            "stroke-width": "border-width",
+        }
+        html_style = {**self.style}
+        if "stroke" in html_style:
+            html_style["border-style"] = "solid"
+        return "; ".join(f"{css_name_mapper.get(key, key)}: {value}" for key, value in html_style.items())
+
+    def style_text(self) -> str:
+        # Generate the style text for the legend
+        return ", ".join(f"{key}:{value}" for key, value in self.style.items())
+
     def to_markdown(self) -> str:
         # The ":" cannot have a space after it or it doesn't parse
-        style_info = ", ".join(f"{key}:{value}" for key, value in self.style.items())
-        return f"classDef {self.name} {style_info};"
+        return f"classDef {self.name} {self.style_text()};"
