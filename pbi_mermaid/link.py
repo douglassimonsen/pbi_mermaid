@@ -1,5 +1,5 @@
+from dataclasses import dataclass, field
 from enum import StrEnum
-from typing import Any
 
 from .node import Node
 
@@ -18,46 +18,19 @@ class LinkHead(StrEnum):
     cross = "x"
 
 
+@dataclass(order=True, unsafe_hash=True)
 class Link:
-    from_node: Node
-    to_node: Node
-    id: str
-    from_head: str
-    to_head: str
-    link_shape: LinkShape
-    link_text: str | None
+    from_node: Node = field(compare=False, hash=False)
+    to_node: Node = field(compare=False, hash=False)
+    id: str = field(default="", kw_only=True, hash=True)
+    from_head: str = field(default=LinkHead.none, compare=False, hash=False, kw_only=True)
+    to_head: str = field(default=LinkHead.arrow, compare=False, hash=False, kw_only=True)
+    link_shape: LinkShape = field(default=LinkShape.normal, compare=False, hash=False, kw_only=True)
+    link_text: str | None = field(default=None, compare=False, hash=False, kw_only=True)
 
-    def __init__(
-        self,
-        from_node: Node,
-        to_node: Node,
-        *,
-        id: str | None = None,
-        from_head: LinkHead = LinkHead.none,
-        to_head: LinkHead = LinkHead.arrow,
-        link_shape: LinkShape = LinkShape.normal,
-        link_text: str | None = None,
-    ) -> None:
-        self.id = id or f"{from_node.id}-->{to_node.id}"
-        self.from_node = from_node
-        self.to_node = to_node
-        self.from_head = from_head
-        self.to_head = to_head
-        self.link_shape = link_shape
-        self.link_text = link_text
-
-    def __hash__(self) -> int:
-        return hash(self.id)
-
-    def __eq__(self, other: Any) -> bool:
-        if isinstance(other, Link):
-            return self.id == other.id
-        return False
-
-    def __lt__(self, other: Any) -> bool:
-        if not isinstance(other, Link):
-            return NotImplemented
-        return (self.from_head, self.to_head) < (other.from_head, other.to_head)
+    def __post_init__(self) -> None:
+        if not self.id:
+            self.id = f"{self.from_node.id}-->{self.to_node.id}"
 
     def to_markdown(self) -> str:
         link_text = f"{self.from_head}{self.link_shape}{self.to_head}"

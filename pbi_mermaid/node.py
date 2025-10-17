@@ -1,6 +1,5 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any
 
 
 @dataclass
@@ -26,45 +25,13 @@ class NodeShape(Enum):
     double_circle = Shape("(((", ")))")
 
 
+@dataclass(order=True)
 class Node:
     id: str
-    shape: NodeShape
-    content: str
-    style: dict[str, str]
-    classes: list[str]
-
-    def __init__(
-        self,
-        id: str,
-        shape: NodeShape = NodeShape.normal,
-        content: str = "",
-        style: dict[str, str] | None = None,
-        classes: list[str] | str | None = None,
-    ) -> None:
-        self.id = id
-        self.shape = shape
-        self.content = content
-        self.style = style or {}
-
-        if isinstance(classes, list):
-            self.classes = classes
-        elif isinstance(classes, str):
-            self.classes = [classes]
-        else:
-            self.classes = []
-
-    def __eq__(self, other: Any) -> bool:
-        if isinstance(other, Node):
-            return self.id == other.id
-        return False
-
-    def __hash__(self) -> int:
-        return hash(self.id)
-
-    def __lt__(self, other: Any) -> bool:
-        if not isinstance(other, Node):
-            return NotImplemented
-        return self.id < other.id
+    shape: NodeShape = field(default=NodeShape.normal, compare=False, hash=False)
+    content: str = field(default="", compare=False, hash=False)
+    style: dict[str, str] = field(default_factory=dict, compare=False, hash=False)
+    classes: list[str] = field(default_factory=list, compare=False, hash=False)
 
     def escape_content(self) -> None:
         self.content = f'"{self.content}"'
@@ -82,27 +49,10 @@ class Node:
         return f"Node({self.id})"
 
 
+@dataclass(order=True)
 class NodeClass:
     name: str
-    style: dict[str, str]
-
-    def __init__(self, name: str, style: dict[str, str]) -> None:
-        self.name = name
-        self.style = style
-
-    def __eq__(self, other: Any) -> bool:
-        """We ignore the possibility of classes with the same name and different style definitions, just like the browser"""
-        if isinstance(other, Node):
-            return self.name == other.name
-        return False
-
-    def __hash__(self) -> int:
-        return hash(self.id)
-
-    def __lt__(self, other: Any) -> bool:
-        if not isinstance(other, NodeClass):
-            return NotImplemented
-        return self.name < other.name
+    style: dict[str, str] = field(default_factory=dict, compare=False, hash=False)
 
     def to_markdown(self) -> str:
         # The ":" cannot have a space after it or it doesn't parse
