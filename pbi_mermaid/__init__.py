@@ -1,6 +1,6 @@
-from .diagram import MermaidDiagram
+from .diagram import Flowchart
 from .link import Link
-from .node import Node
+from .node import Node, NodeClass
 
-__all__ = ["Node", "Link", "MermaidDiagram"]
+__all__ = ["Node", "Link", "Flowchart", "NodeClass"]
 __version__ = "0.3.1"

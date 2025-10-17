@@ -31,7 +31,7 @@ class Link:
         self,
         from_node: Node,
         to_node: Node,
-        /,
+        *,
         id: str | None = None,
         from_head: LinkHead = LinkHead.none,
         to_head: LinkHead = LinkHead.arrow,
@@ -46,13 +46,13 @@ class Link:
         self.link_shape = link_shape
         self.link_text = link_text
 
+    def __hash__(self) -> int:
+        return hash(self.id)
+
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, Link):
             return self.id == other.id
         return False
-
-    def __hash__(self) -> int:
-        return hash(self.id)
 
     def __lt__(self, other: Any) -> bool:
         if not isinstance(other, Link):

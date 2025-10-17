@@ -1,10 +1,10 @@
 from typing import TYPE_CHECKING
 
-from .link import Link
-from .node import Node
+from ..link import Link
+from ..node import Node
 
 if TYPE_CHECKING:
-    from .diagram import MermaidDiagram
+    from ..diagram import MermaidDiagram
 
 
 def get_children(nodes: list["Node"], links: list["Link"], parent: "Node") -> tuple[set["Node"], set["Link"]]:
@@ -68,7 +68,7 @@ def get_remaining(nodes: list["Node"], links: list["Link"], split_node: "Node") 
 def chunk_on_node(
     nodes: list["Node"], links: list["Link"], split_node: "Node"
 ) -> tuple["MermaidDiagram", list["Node"], list["Link"]]:
-    from .diagram import MermaidDiagram
+    from ..diagram import MermaidDiagram
 
     children_nodes, children_links = get_children(nodes, links, split_node)
     diagram = MermaidDiagram(list(children_nodes), list(children_links), title=split_node.id)
@@ -81,7 +81,7 @@ def chunker(nodes: list["Node"], links: list["Link"], split_nodes: list["Node"])
 
     Note: Order matters for the split nodes
     """
-    from .diagram import MermaidDiagram
+    from ..diagram import MermaidDiagram
 
     diagrams: list["MermaidDiagram"] = []
     for split_node in split_nodes:

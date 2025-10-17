@@ -31,6 +31,7 @@ class Node:
     shape: NodeShape
     content: str
     style: dict[str, str]
+    classes: list[str]
 
     def __init__(
         self,
@@ -38,11 +39,19 @@ class Node:
         shape: NodeShape = NodeShape.normal,
         content: str = "",
         style: dict[str, str] | None = None,
+        classes: list[str] | str | None = None,
     ) -> None:
         self.id = id
         self.shape = shape
         self.content = content
         self.style = style or {}
+
+        if isinstance(classes, list):
+            self.classes = classes
+        elif isinstance(classes, str):
+            self.classes = [classes]
+        else:
+            self.classes = []
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, Node):
@@ -65,7 +74,37 @@ class Node:
         if self.style:
             style = ",".join(f"{k}:{v}" for k, v in self.style.items())
             ret += f"\nstyle {self.id} {style}"
-        return ret
+        for cls_name in self.classes:
+            ret += f"\nclass {self.id} {cls_name}"
+        return ret + "\n"
 
     def __repr__(self) -> str:
         return f"Node({self.id})"
+
+
+class NodeClass:
+    name: str
+    style: dict[str, str]
+
+    def __init__(self, name: str, style: dict[str, str]) -> None:
+        self.name = name
+        self.style = style
+
+    def __eq__(self, other: Any) -> bool:
+        """We ignore the possibility of classes with the same name and different style definitions, just like the browser"""
+        if isinstance(other, Node):
+            return self.name == other.name
+        return False
+
+    def __hash__(self) -> int:
+        return hash(self.id)
+
+    def __lt__(self, other: Any) -> bool:
+        if not isinstance(other, NodeClass):
+            return NotImplemented
+        return self.name < other.name
+
+    def to_markdown(self) -> str:
+        # The ":" cannot have a space after it or it doesn't parse
+        style_info = ", ".join(f"{key}:{value}" for key, value in self.style.items())
+        return f"classDef {self.name} {style_info};"
